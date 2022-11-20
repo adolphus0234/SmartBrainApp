@@ -41,7 +41,7 @@ class Register extends React.Component {
 	 		const errorMessage = document.getElementById('error-message');
 			return errorMessage.innerText = "Password must be greater than 5 characters";
 		} else if (email.includes('@') && (validEmail.includes(true))) {
-			fetch('https://shielded-tundra-50055.herokuapp.com/register', {
+			fetch('https://secure-coast-44570.herokuapp.com/register', {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({

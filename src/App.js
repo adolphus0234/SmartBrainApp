@@ -141,7 +141,7 @@ class App extends Component {
         this.apiTimeout();
         imageScroll();
 
-        fetch('https://shielded-tundra-50055.herokuapp.com/imageurl', {
+        fetch('https://secure-coast-44570.herokuapp.com/imageurl', {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -161,7 +161,7 @@ class App extends Component {
                 } else {
                     this.setState({invalidUrl: false})
                 }
-                    fetch('https://shielded-tundra-50055.herokuapp.com/image', {
+                    fetch('https://secure-coast-44570.herokuapp.com/image', {
                         method: 'put',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
@@ -189,7 +189,7 @@ class App extends Component {
        this.apiTimeout();
        imageScroll();
 
-       fetch('https://shielded-tundra-50055.herokuapp.com/imageurlcolor', {
+       fetch('https://secure-coast-44570.herokuapp.com/imageurlcolor', {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -211,7 +211,7 @@ class App extends Component {
             const colorsArray = resp.outputs[0].data.colors;
             this.setState({colors: colorsArray, colorFetch: 'false'})
 
-                    fetch('https://shielded-tundra-50055.herokuapp.com/image', {
+                    fetch('https://secure-coast-44570.herokuapp.com/image', {
                         method: 'put',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
@@ -238,7 +238,7 @@ class App extends Component {
        this.apiTimeout();
        imageScroll();
 
-       fetch('https://shielded-tundra-50055.herokuapp.com/imageurlfood', {
+       fetch('https://secure-coast-44570.herokuapp.com/imageurlfood', {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -260,7 +260,7 @@ class App extends Component {
             const foodArray = resp.outputs[0].data.concepts;
             this.setState({ingredients: foodArray, foodFetch: 'false'})
             
-                    fetch('https://shielded-tundra-50055.herokuapp.com/image', {
+                    fetch('https://secure-coast-44570.herokuapp.com/image', {
                         method: 'put',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
