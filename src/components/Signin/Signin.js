@@ -18,27 +18,40 @@ class Signin extends React.Component {
 	}
 
 	submitFunction = () => {
+		const { signInEmail, signInPassword } = this.state;
+		const emailField = document.getElementById('email-address');
 		const passwordField = document.getElementById('password');
-		const errorMessage = document.getElementById('error-message');	
-			  errorMessage.innerText = "Signing In...";			
-		fetch('https://secure-coast-44570.herokuapp.com/signin', {
-			method: 'post',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({
-				email: this.state.signInEmail,
-				password: this.state.signInPassword
+		const errorMessage = document.getElementById('error-message');
+
+			  errorMessage.innerText = "Signing In...";
+
+		if (!signInEmail || !signInPassword) {
+			if (signInEmail === '') {
+				emailField.focus();
+			} else {
+				passwordField.focus();
+			}
+			return errorMessage.innerText = "Enter Email and Password."
+		} else {
+			fetch('https://secure-coast-44570.herokuapp.com/signin', {
+				method: 'post',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({
+					email: signInEmail,
+					password: signInPassword
+				})
 			})
-		})
-			.then(response => response.json())
-			.then(user => {
-				if (user.id) {
-				 this.props.loadUser(user);	
-				 this.props.onRouteChange('home');
-				} else {
-					return errorMessage.innerText = "Error Signing In...";
-				}
-			});
-			return passwordField.value = '';
+				.then(response => response.json())
+				.then(user => {
+					if (user.id) {
+					 this.props.loadUser(user);	
+					 this.props.onRouteChange('home');
+					} else {
+						return errorMessage.innerText = "Error Signing In...";
+					}
+				});
+				return passwordField.value = '';
+			}		
 	}
 
 
@@ -58,14 +71,11 @@ class Signin extends React.Component {
 		passwordField.addEventListener("keypress", this.onSubmitSignInKeyPress);
 	}
 
-	
-
-
 	render() {
 		const { onRouteChange } = this.props;
 		
 		return (
-			<article className="br3 ba b--black-10 mv4 w-100 w-60-m  mw6 shadow-5 center">
+			<article className="br3 ba b--black-10 mv4 w-100 w-60-m mw6 shadow-5 center">
 				<main className="pa4 black-80">
 				  <div className="measure">
 				    <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -105,7 +115,7 @@ class Signin extends React.Component {
 				      <p onClick={() => onRouteChange('register')} 
 				      	 className="f6 link dim black db pointer">Register</p>
 				    </div>
-				    <div className="f4" id="error-message">
+				    <div className="f5" id="error-message">
 				    </div>
 				  </div>
 				</main>

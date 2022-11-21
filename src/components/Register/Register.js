@@ -25,7 +25,12 @@ class Register extends React.Component {
 	}
 
 	onSubmitSignIn = () => {
+		const nameField = document.getElementById('name');
+		const emailField = document.getElementById('email');
+		const passwordField = document.getElementById('password');
+		const errorMessage = document.getElementById('error-message');
 		const { name, email, password } = this.state;
+
 		const validEmail = domains.map((domain) => {
 			const valid = email.includes(domain);
             if (valid === true) {
@@ -35,30 +40,40 @@ class Register extends React.Component {
 		});
 
 		if (!name || !email || !password) {
-			const errorMessage = document.getElementById('error-message');
+			if (name === '') {
+				nameField.focus(); 
+			} else if (email === '' && name !== '') {
+				emailField.focus();
+			} else {
+				passwordField.focus();
+			}
 			return errorMessage.innerText = "Please fill in all fields";
-	 	} else if (password.length < 5) {
-	 		const errorMessage = document.getElementById('error-message');
-			return errorMessage.innerText = "Password must be greater than 5 characters";
+	 	
 		} else if (email.includes('@') && (validEmail.includes(true))) {
-			fetch('https://secure-coast-44570.herokuapp.com/register', {
-			method: 'post',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify({
-				name: name,
-				email: email,
-				password: password
-			})
-		})
-			.then(response => response.json())
-			.then(user => {
-				if (user.id) {
-				this.props.loadUser(user);	
-				this.props.onRouteChange('home');
-				}
-			});
+
+			if (password.length < 5) {
+				return errorMessage.innerText = "Password must be 5 or more characters";
+
+			} else {
+				errorMessage.innerText = "Please wait...";
+				fetch('https://secure-coast-44570.herokuapp.com/register', {
+					method: 'post',
+					headers: {'Content-Type': 'application/json'},
+					body: JSON.stringify({
+						name: name,
+						email: email,
+						password: password
+					})
+				})
+				.then(response => response.json())
+				.then(user => {
+					if (user.id) {
+					this.props.loadUser(user);	
+					this.props.onRouteChange('home');
+					}
+				});
+			}		
 		} else {
-			const errorMessage = document.getElementById('error-message');
 			return errorMessage.innerText = "Please enter valid email";
 		}		
 	}
