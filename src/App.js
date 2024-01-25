@@ -43,6 +43,7 @@ const initialState = {
             colors: [],
             ingredients: [],
             faceFetch: false,
+            boundingBoxRef: null,
             colorFetch: false,
             foodFetch: false,
             timeout: false,
@@ -94,6 +95,16 @@ class App extends Component {
             });         
         }
         this.setState({route: route});
+
+        // Will restore bounding box(es) on Face Detect screen if a photo has already
+        // been submitted
+        if (route === 'home' && this.state.boundingBoxRef !== null) {
+            let _this = this;
+
+            setTimeout(() => {
+                _this.setState({box: this.state.boundingBoxRef})
+            }, 50)  
+        }
     }
 
     //INPUT
@@ -129,10 +140,11 @@ class App extends Component {
 
     clearInputField = (ref) => {
         ref.current.value = "";
+        ref.current.focus();
     }   
 
     displayBox = (box) => {
-        this.setState({box: box});
+        this.setState({box: box, boundingBoxRef: box});
     }
 
 
@@ -199,9 +211,9 @@ class App extends Component {
         imageScroll();
 
         if (this.state.input === "") {
-            this.setState({invalidUrl: true, faceFetch: false});
+            this.setState({invalidUrl: true, colorFetch: false});
         } else {
-           fetch('https://secure-coast-44570.herokuapp.com/imageurlcolor', {
+            fetch('https://secure-coast-44570.herokuapp.com/imageurlcolor', {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -252,7 +264,7 @@ class App extends Component {
         imageScroll();
 
        if (this.state.input === "") {
-            this.setState({invalidUrl: true, faceFetch: false});
+            this.setState({invalidUrl: true, foodFetch: false});
         } else {
 
             fetch('https://secure-coast-44570.herokuapp.com/imageurlfood', {

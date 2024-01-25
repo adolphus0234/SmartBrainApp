@@ -15,7 +15,6 @@ const BoundingBox = ({ clarifaiFace }) => {
             	};
             	
         return box;
-
     }
 
 
