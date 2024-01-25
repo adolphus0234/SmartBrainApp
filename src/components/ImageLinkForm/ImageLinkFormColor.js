@@ -1,7 +1,8 @@
-import React from 'react'; 
+import React, { useRef } from 'react';
 import './ImageLinkForm.css';
 
-const ImageLinkFormColor = ({ onInputChange, onPictureSubmitColor }) => {
+const ImageLinkFormColor = ({ onInputChange, onPictureSubmitColor, clearInputField }) => {
+	const inputRef = useRef();
 	return (
 			<div>
 				<p className='F3 pl1 pr1'>
@@ -13,10 +14,14 @@ const ImageLinkFormColor = ({ onInputChange, onPictureSubmitColor }) => {
 								placeholder='Enter Image URL' 
 								type='text' 
 								onChange={onInputChange}
+								ref={inputRef}
 						/>
-						<button className='w-30 grow E4 link pv2 dib white bg-light-purple' 
+						<button className='w-20 grow E4 link pv2 dib white bg-light-purple' 
 								onClick={onPictureSubmitColor}
 						>Detect</button>
+						<button className='w-20 grow E4 link pv2 dib white bg-light-purple' 
+								onClick={() => clearInputField(inputRef)}
+						>Clear</button>
 					</div>
 				</div>
 			</div>

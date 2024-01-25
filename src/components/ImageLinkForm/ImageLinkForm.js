@@ -1,7 +1,8 @@
-import React from 'react'; 
+import React, { useRef } from 'react'; 
 import './ImageLinkForm.css';
 
-const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
+const ImageLinkForm = ({ onInputChange, onPictureSubmit, clearInputField }) => {
+	const inputRef = useRef();
 	return (
 			<div>
 				<p className='F3 pl1 pr1'>
@@ -14,10 +15,14 @@ const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
 								type='text' 
 								onChange={onInputChange}
 								id='form-input'
+								ref={inputRef}
 						/>
-						<button className='w-30 grow E4 link pv2 dib white bg-light-purple' 
+						<button className='w-20 grow E4 link pv2 dib white bg-light-purple' 
 								onClick={onPictureSubmit}
 						>Detect</button>
+						<button className='w-20 grow E4 link pv2 dib white bg-light-purple' 
+								onClick={() => clearInputField(inputRef)}
+						>Clear</button>
 					</div>
 				</div>
 			</div>

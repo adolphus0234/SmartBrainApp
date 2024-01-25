@@ -125,7 +125,11 @@ class App extends Component {
             this.setState({apiModelFail: true})
         }
         return Object.entries(clarifaiFaceObject);
-    }    
+    }
+
+    clearInputField = (ref) => {
+        ref.current.value = "";
+    }   
 
     displayBox = (box) => {
         this.setState({box: box});
@@ -141,139 +145,153 @@ class App extends Component {
         this.apiTimeout();
         imageScroll();
 
-        fetch('https://secure-coast-44570.herokuapp.com/imageurl', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                input: this.state.input
-                            })
-                    })
-        .then(response => response.json())
-        .then(response => {
-            if (response) {
 
-                    this.apiClearTimeout();
-                    imageScroll();
-                    this.setState({faceFetch: false})
+        if (this.state.input === "") {
+            this.setState({invalidUrl: true, faceFetch: false});
+        } else {
+            fetch('http://localhost:3001/imageurl', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                    input: this.state.input
+                                })
+                        })
+            .then(response => response.json())
+            .then(response => {
+                if (response) {
 
-                if (response === 'Unable to access API') {
-                    return this.setState({invalidUrl: true, faceFetch: false})
-                } else {
-                    this.setState({invalidUrl: false})
+                        this.apiClearTimeout();
+                        imageScroll();
+                        this.setState({faceFetch: false})
+
+                    if (response === 'Unable to access API') {
+                        return this.setState({invalidUrl: true, faceFetch: false})
+                    } else {
+                        this.setState({invalidUrl: false})
+                    }
+                        fetch('https://secure-coast-44570.herokuapp.com/image', {
+                            method: 'put',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                id: this.state.user.id
+                                })
+                        })
+                        .then(response => response.json())
+                        .then(count => {
+                            this.setState(Object.assign(this.state.user, { entries: count }))
+                        })  
                 }
-                    fetch('https://secure-coast-44570.herokuapp.com/image', {
-                        method: 'put',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            id: this.state.user.id
-                            })
-                    })
-                    .then(response => response.json())
-                    .then(count => {
-                        this.setState(Object.assign(this.state.user, { entries: count }))
-                    })  
-            }
-            this.displayBox(this.calculateFaceLocation(response))        
-        })
-        .catch(err => console.log(err));
+                this.displayBox(this.calculateFaceLocation(response))        
+            })
+            .catch(err => console.log(err));
+        }
     }
 
     //COLOR_MODEL========================================
 
     onPictureSubmitColor = () => {
-       this.setState({
+        this.setState({
                 imageUrl2: this.state.input, 
                 colorFetch: true, 
                 timeout: false
             })
-       this.apiTimeout();
-       imageScroll();
+        this.apiTimeout();
+        imageScroll();
 
-       fetch('https://secure-coast-44570.herokuapp.com/imageurlcolor', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                input: this.state.input
-                            })
-                    })
-        .then(response => response.json())
-        .then(resp => {
-            if (resp) {
+        if (this.state.input === "") {
+            this.setState({invalidUrl: true, faceFetch: false});
+        } else {
+           fetch('https://secure-coast-44570.herokuapp.com/imageurlcolor', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                    input: this.state.input
+                                })
+                        })
+            .then(response => response.json())
+            .then(resp => {
+                if (resp) {
 
-            if (resp === 'Unable to access API') {
-                    this.setState({invalidUrl: true, colorFetch: false})
-                } else {
-                    this.setState({invalidUrl: false})
-                }
+                if (resp === 'Unable to access API') {
+                        this.setState({invalidUrl: true, colorFetch: false})
+                    } else {
+                        this.setState({invalidUrl: false})
+                    }
 
-            this.apiClearTimeout();
-            imageScroll();
-            const colorsArray = resp.outputs[0].data.colors;
-            this.setState({colors: colorsArray, colorFetch: 'false'})
+                this.apiClearTimeout();
+                imageScroll();
+                const colorsArray = resp.outputs[0].data.colors;
+                this.setState({colors: colorsArray, colorFetch: 'false'})
 
-                    fetch('https://secure-coast-44570.herokuapp.com/image', {
-                        method: 'put',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            id: this.state.user.id
-                            })
-                    })
-                    .then(response => response.json())
-                    .then(count => {
-                        this.setState(Object.assign(this.state.user, { entries: count }))
-                    })  
-            }  
-        }) 
-        .catch(err => console.log(err));
+                        fetch('https://secure-coast-44570.herokuapp.com/image', {
+                            method: 'put',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                id: this.state.user.id
+                                })
+                        })
+                        .then(response => response.json())
+                        .then(count => {
+                            this.setState(Object.assign(this.state.user, { entries: count }))
+                        })  
+                }  
+            }) 
+            .catch(err => console.log(err));
+        }
     }
 
     //FOOD_MODEL===========================================
 
     onPictureSubmitFood = () => {
-       this.setState({
+        this.setState({
                 imageUrl3: this.state.input, 
                 foodFetch: true, 
                 timeout: false
             })
-       this.apiTimeout();
-       imageScroll();
+        this.apiTimeout();
+        imageScroll();
 
-       fetch('https://secure-coast-44570.herokuapp.com/imageurlfood', {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                input: this.state.input
-                            })
-                    })
-        .then(response => response.json())
-        .then(resp => {
-            if (resp) {            
+       if (this.state.input === "") {
+            this.setState({invalidUrl: true, faceFetch: false});
+        } else {
 
-            if (resp === 'Unable to access API') {
-                    this.setState({invalidUrl: true, foodFetch: false})
-                } else {
-                    this.setState({invalidUrl: false})
-                }
+            fetch('https://secure-coast-44570.herokuapp.com/imageurlfood', {
+                    method: 'post',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                    input: this.state.input
+                                })
+                        })
+            .then(response => response.json())
+            .then(resp => {
+                if (resp) {            
 
-            this.apiClearTimeout();
-            imageScroll();
-            const foodArray = resp.outputs[0].data.concepts;
-            this.setState({ingredients: foodArray, foodFetch: 'false'})
-            
-                    fetch('https://secure-coast-44570.herokuapp.com/image', {
-                        method: 'put',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            id: this.state.user.id
-                            })
-                    })
-                    .then(response => response.json())
-                    .then(count => {
-                        this.setState(Object.assign(this.state.user, { entries: count }))
-                    })  
-            }  
-        }) 
-        .catch(err => console.log(err));
+                if (resp === 'Unable to access API') {
+                        this.setState({invalidUrl: true, foodFetch: false})
+                    } else {
+                        this.setState({invalidUrl: false})
+                    }
+
+                this.apiClearTimeout();
+                imageScroll();
+                const foodArray = resp.outputs[0].data.concepts;
+                this.setState({ingredients: foodArray, foodFetch: 'false'})
+                
+                        fetch('https://secure-coast-44570.herokuapp.com/image', {
+                            method: 'put',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                id: this.state.user.id
+                                })
+                        })
+                        .then(response => response.json())
+                        .then(count => {
+                            this.setState(Object.assign(this.state.user, { entries: count }))
+                        })  
+                }  
+            }) 
+            .catch(err => console.log(err));
+        }
     }
 
 
@@ -320,6 +338,7 @@ class App extends Component {
                     <FaceDetect 
                         onInputChange={this.onInputChange}
                         onPictureSubmit={this.onPictureSubmit}
+                        clearInputField={this.clearInputField}
                         box={box}
                         invalidUrl={invalidUrl}
                         imageUrl={imageUrl}
@@ -339,7 +358,8 @@ class App extends Component {
                               />  
                           <ImageLinkFormColor 
                                 onInputChange={this.onInputChange} 
-                                onPictureSubmitColor={this.onPictureSubmitColor} 
+                                onPictureSubmitColor={this.onPictureSubmitColor}
+                                clearInputField={this.clearInputField} 
                                 />
                           <ColorModel 
                                 colors={colors} 
@@ -361,6 +381,7 @@ class App extends Component {
                                 <ImageLinkFormFood 
                                     onInputChange={this.onInputChange} 
                                     onPictureSubmitFood={this.onPictureSubmitFood} 
+                                    clearInputField={this.clearInputField}
                                     />
                                 <FoodModel 
                                     ingredients={ingredients} 
