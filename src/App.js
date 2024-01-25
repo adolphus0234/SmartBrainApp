@@ -149,7 +149,7 @@ class App extends Component {
         if (this.state.input === "") {
             this.setState({invalidUrl: true, faceFetch: false});
         } else {
-            fetch('http://localhost:3001/imageurl', {
+            fetch('https://secure-coast-44570.herokuapp.com/imageurl', {
                     method: 'post',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
